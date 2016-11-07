@@ -1,6 +1,9 @@
 #!/bin/bash
 #
-# letsencrypt renew
+# letsencrypt renew for cron / shell
+# by André Bauer
+# https://github.com/monotek/letsencrypt-renew/
+# LICENSE: https://raw.githubusercontent.com/monotek/letsencrypt-renew/master/LICENSE
 #
 
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
