@@ -9,7 +9,7 @@
 #config
 DOMAINS="example.com example.net"
 LETSENCRYPT_CMD="/usr/bin/letsencrypt"
-LETSENCRYPT_CERTS"/etc/letsencrypt/live"
+LETSENCRYPT_CERTS="/etc/letsencrypt/live"
 KEY_SIZE="4096"
 # creates tempfiles in .well-known dir in domain folder or
 LE_METHOD="--webroot-path /var/www/${DOMAIN}/html/ --webroot"
