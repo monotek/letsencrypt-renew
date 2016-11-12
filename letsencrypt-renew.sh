@@ -12,6 +12,7 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 LETSENCRPYT_CMD="/usr/bin/letsencrypt"
 LETSENCRYPT_CERTS="/etc/letsencrypt/live"
 LETSENCRYPT_HTTP_DIR="/var/www/letsencrypt"
+KEY_SIZE="4096"
 UPLOAD_TO_WEBSERVER="no"
 WEBSERVER="root@your.host"
 WEBSERVER_CERTS_DIR="/etc/nginx/ssl"
@@ -42,11 +43,11 @@ for DOMAIN in ${DOMAINS}; do
 
     if [ "$(echo ${DOMAIN} | awk -F . '{print NF-1}')" -gt "1" ]; then
 	actionstart "create cert for ${DOMAIN} without www subdomain"
-	${LETSENCRYPT_CMD} certonly --standalone-supported-challenges http-01 --rsa-key-size 4096 --duplicate --standalone --text -d ${DOMAIN}
+	${LETSENCRYPT_CMD} certonly --standalone-supported-challenges http-01 --rsa-key-size ${KEY_SIZE} --duplicate --standalone --text -d ${DOMAIN}
 	exitcode "create cert for ${DOMAIN} without www subdomain"
     else
 	actionstart "create cert for ${DOMAIN} including www sub domain"
-	${LETSENCRYPT_CMD} certonly --standalone-supported-challenges http-01 --rsa-key-size 4096 --duplicate --standalone --text -d ${DOMAIN} -d www.${DOMAIN}
+	${LETSENCRYPT_CMD} certonly --standalone-supported-challenges http-01 --rsa-key-size ${KEY_SIZE} --duplicate --standalone --text -d ${DOMAIN} -d www.${DOMAIN}
 	exitcode "create cert for ${DOMAIN} including www sub domain"
     fi
 
