@@ -1,0 +1,11 @@
+le-domains: example.com example.net
+le-cmd: /usr/bin/letsencrypt
+le-certs: /etc/letsencrypt/live
+le-http-dir: /var/www/letsencrypt
+le-key-size: 4096
+le-method: --webroot-path /var/www/${DOMAIN}/html/ --webroot
+le-method2: --standalone-supported-challenges http-01 --standalone" 
+le-upload-web: no
+le-webserver: root@your.host
+le-webserver-certs-dir: /etc/nginx/ssl
+le-webserver-restart: yes

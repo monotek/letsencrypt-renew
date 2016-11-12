@@ -8,25 +8,41 @@
 
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
-#config
-LETSENCRPYT_CMD="/usr/bin/letsencrypt"
-LETSENCRYPT_CERTS="/etc/letsencrypt/live"
-LETSENCRYPT_HTTP_DIR="/var/www/letsencrypt"
-KEY_SIZE="4096"
-# creates tempfiles in .well-known dir in domain folder
-LE_METHOD="--webroot-path /var/www/${DOMAIN}/html/ --webroot"
-# opens letsencrypt prozess on port 80. can be used for creating certs on another server. reverse proxy to this server by looking for .well-known dir
-#LE_METHOD="--standalone-supported-challenges http-01 --standalone" 
-UPLOAD_TO_WEBSERVER="no"
-WEBSERVER="root@your.host"
-WEBSERVER_CERTS_DIR="/etc/nginx/ssl"
-RESTART_WEBSERVER="yes"
+#le-domains: uplink23.net andre-bauer.org blog.andre-bauer.org pma.andre.bauer.orgle-cmd: /usr/bin/letsencrypt
+#le-certs: /etc/letsencrypt/live
+#le-http-dir: /var/www/letsencrypt
+#le-key-size: 4096
+#le-method: --webroot-path /var/www/${DOMAIN}/html/ --webroot
+#le-method2: --standalone-supported-challenges http-01 --standalone" 
+#le-upload-web: no
+#le-webserver: root@your.host
+#le-webserver-certs-dir: /etc/nginx/ssl
+#le-webserver-restart: yes
 
-# use command line arguments for domains or add the to the domains.yml
+
+#config
+LETSENCRPYT_CMD="$(grep le-cmd < config.yml | sed 's/le-cmd: //')"
+LETSENCRYPT_CERTS="$(grep le-certs < config.yml | sed 's/le-certs: //')"
+LETSENCRYPT_HTTP_DIR="$(grep le-http-dir < config.yml | sed 's/le-http-dir: //')"
+KEY_SIZE="$(grep le-key-size < config.yml | sed 's/le-key-size: //')"
+# creates tempfiles in .well-known dir in domain folder or
+# opens letsencrypt prozess on port 80 which can can be used for creating certs on another server. reverse proxy to this server by looking for .well-known dir
+LE_METHOD="$(grep le-method < config.yml | sed 's/le-method: //')"
+UPLOAD_TO_WEBSERVER="$(grep le-upload-web < config.yml | sed 's/le-upload-web: //')"
+WEBSERVER="$(grep le-webserver < config.yml | sed 's/le-webserver: //')"
+WEBSERVER_CERTS_DIR="$(grep le-webserver-certs-dir < config.yml | sed 's/le-webserver-certs-dir: //')"
+RESTART_WEBSERVER="$(grep le-webserver-restart < config.yml | sed 's/le-webserver-restart: //')"
+
+if [ -f config.yml ]; then
+    echo "config.yml not found! create it from config.yml.dist before running this script!"
+    exit 1
+fi
+
+# use command line arguments for domains or add them to config.yml
 if [ -n "${1}" ]; then
     DOMAINS="${1}"
 else
-    DOMAINS="$(sed 's/le-domains://' < domains.yml)"
+    DOMAINS="$(grep le-domains < config.yml | sed 's/le-domains: //')"
 fi
 
 # functions
