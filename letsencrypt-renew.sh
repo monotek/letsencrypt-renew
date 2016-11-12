@@ -97,7 +97,7 @@ if [ "${RESTART_WEBSERVER}" == "yes" ];then
 
     if [ -n "$(which nginx)" ]; then
 	systemctl restart nginx
-    elif[ -n "$(which apache2)" ]; then
+    elif [ -n "$(which apache2)" ]; then
 	systemctl restart apache
     else
 	echo "no webserver found"
