@@ -13,15 +13,20 @@ LETSENCRPYT_CMD="/usr/bin/letsencrypt"
 LETSENCRYPT_CERTS="/etc/letsencrypt/live"
 LETSENCRYPT_HTTP_DIR="/var/www/letsencrypt"
 KEY_SIZE="4096"
+# creates tempfiles in .well-known dir in domain folder
+LE_METHOD="--webroot-path /var/www/${DOMAIN}/html/ --webroot"
+# opens letsencrypt prozess on port 80. can be used for creating certs on another server. reverse proxy to this server by looking for .well-known dir
+#LE_METHOD="--standalone-supported-challenges http-01 --standalone" 
 UPLOAD_TO_WEBSERVER="no"
 WEBSERVER="root@your.host"
 WEBSERVER_CERTS_DIR="/etc/nginx/ssl"
 RESTART_WEBSERVER="yes"
 
+# use command line arguments for domains or add the to the domains.yml
 if [ -n "${1}" ]; then
     DOMAINS="${1}"
 else
-    DOMAINS="your.domain1.com your.domain2.com"
+    DOMAINS="$(sed 's/le-domains://' < domains.yml)"
 fi
 
 # functions
@@ -43,11 +48,11 @@ for DOMAIN in ${DOMAINS}; do
 
     if [ "$(echo ${DOMAIN} | awk -F . '{print NF-1}')" -gt "1" ]; then
 	actionstart "create cert for ${DOMAIN} without www subdomain"
-	${LETSENCRYPT_CMD} certonly --standalone-supported-challenges http-01 --rsa-key-size ${KEY_SIZE} --duplicate --standalone --text -d ${DOMAIN}
+	${LETSENCRYPT_CMD} certonly --rsa-key-size ${KEY_SIZE} --duplicate --text ${LE_METHOD} -d ${DOMAIN}
 	exitcode "create cert for ${DOMAIN} without www subdomain"
     else
 	actionstart "create cert for ${DOMAIN} including www sub domain"
-	${LETSENCRYPT_CMD} certonly --standalone-supported-challenges http-01 --rsa-key-size ${KEY_SIZE} --duplicate --standalone --text -d ${DOMAIN} -d www.${DOMAIN}
+	${LETSENCRYPT_CMD} certonly --rsa-key-size ${KEY_SIZE} --duplicate --text ${LE_METHOD} -d ${DOMAIN} -d www.${DOMAIN}
 	exitcode "create cert for ${DOMAIN} including www sub domain"
     fi
 
