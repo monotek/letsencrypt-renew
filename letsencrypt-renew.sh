@@ -9,17 +9,17 @@
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
 if [ ! -f config.sh ]; then
-    echo "config.sh not found! create it from config.sh.dist before running this script!"
+    echo "config not found! create it from config.dist before running this script!"
     exit 1
 fi
 
-. "config.sh"
+. "config"
 
-# use command line arguments for domains or add them to config.yml
+# use command line arguments for domains or add them to config
 if [ -n "${1}" ]; then
     DOMAINS="${1}"
 else
-    DOMAINS="$(grep le-domains < config.yml | sed 's/le-domains: //')"
+    DOMAINS="${DOMAINS}"
 fi
 
 # functions
@@ -39,7 +39,7 @@ function exitcode (){
 # script
 for DOMAIN in ${DOMAINS}; do
 
-    . "config.sh"
+    . "config"
 
     if [ "$(echo ${DOMAIN} | awk -F . '{print NF-1}')" -gt "1" ]; then
 	actionstart "create cert for ${DOMAIN} without www subdomain"
