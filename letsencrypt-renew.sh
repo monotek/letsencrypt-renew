@@ -8,24 +8,12 @@
 
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
-if [ ! -f config.yml ]; then
-    echo "config.yml not found! create it from config.yml.dist before running this script!"
+if [ ! -f config.sh ]; then
+    echo "config.sh not found! create it from config.sh.dist before running this script!"
     exit 1
 fi
 
-#config
-LETSENCRYPT_CMD="$(grep le-cmd < config.yml | sed 's/le-cmd: //')"
-LETSENCRYPT_CERTS="$(grep le-certs < config.yml | sed 's/le-certs: //')"
-LETSENCRYPT_HTTP_DIR="$(grep le-http-dir < config.yml | sed 's/le-http-dir: //')"
-KEY_SIZE="$(grep le-key-size < config.yml | sed 's/le-key-size: //')"
-# creates tempfiles in .well-known dir in domain folder or
-# opens letsencrypt prozess on port 80 which can can be used for creating certs on another server. reverse proxy to this server by looking for .well-known dir
-LE_METHOD="$(grep le-method < config.yml | sed 's/le-method: //')"
-UPLOAD_TO_WEBSERVER="$(grep le-upload-web < config.yml | sed 's/le-upload-web: //')"
-WEBSERVER="$(grep le-webserver < config.yml | sed 's/le-webserver: //')"
-WEBSERVER_CERTS_DIR="$(grep le-webserver-certs-dir < config.yml | sed 's/le-webserver-certs-dir: //')"
-RESTART_WEBSERVER="$(grep le-webserver-restart < config.yml | sed 's/le-webserver-restart: //')"
-
+. "config.sh"
 
 # use command line arguments for domains or add them to config.yml
 if [ -n "${1}" ]; then
@@ -50,6 +38,8 @@ function exitcode (){
 
 # script
 for DOMAIN in ${DOMAINS}; do
+
+    . "config.sh"
 
     if [ "$(echo ${DOMAIN} | awk -F . '{print NF-1}')" -gt "1" ]; then
 	actionstart "create cert for ${DOMAIN} without www subdomain"

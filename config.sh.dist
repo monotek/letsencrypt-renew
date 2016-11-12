@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+# letsencrypt renew for cron / shell
+# by André Bauer
+# https://github.com/monotek/letsencrypt-renew/
+# LICENSE: https://raw.githubusercontent.com/monotek/letsencrypt-renew/master/LICENSE
+#
+
+#config
+DOMAINS="example.com example.net"
+LETSENCRYPT_CMD="/usr/bin/letsencrypt"
+LETSENCRYPT_CERTS"/etc/letsencrypt/live"
+KEY_SIZE="4096"
+# creates tempfiles in .well-known dir in domain folder or
+LE_METHOD="--webroot-path /var/www/${DOMAIN}/html/ --webroot"
+# opens letsencrypt prozess on port 80 which can can be used for creating certs on another server. reverse proxy to this server by looking for .well-known dir
+#LE_METHOD="--standalone-supported-challenges http-01 --standalone" "
+UPLOAD_TO_WEBSERVER="no"
+WEBSERVER="root@your.host"
+WEBSERVER_CERTS_DIR="/etc/nginx/ssl"
+RESTART_WEBSERVER="yes"
