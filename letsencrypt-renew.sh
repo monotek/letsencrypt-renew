@@ -9,7 +9,7 @@
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
 #config
-LETSENCRPYT_CMD="$(grep le-cmd < config.yml | sed 's/le-cmd: //')"
+LETSENCRYPT_CMD="$(grep le-cmd < config.yml | sed 's/le-cmd: //')"
 LETSENCRYPT_CERTS="$(grep le-certs < config.yml | sed 's/le-certs: //')"
 LETSENCRYPT_HTTP_DIR="$(grep le-http-dir < config.yml | sed 's/le-http-dir: //')"
 KEY_SIZE="$(grep le-key-size < config.yml | sed 's/le-key-size: //')"
