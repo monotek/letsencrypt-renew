@@ -8,7 +8,7 @@
 
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
-if [ ! -f config.sh ]; then
+if [ ! -f config ]; then
     echo "config not found! create it from config.dist before running this script!"
     exit 1
 fi
