@@ -68,6 +68,18 @@ for DOMAIN in ${DOMAINS}; do
 	actionstart "scp ${WEBSERVER_CERTS_DIR}/${DOMAIN}-privkey.pem"
 	scp ${LETSENCRYPT_CERTS}/${NEWEST_CERT}/privkey.pem ${WEBSERVER}:${WEBSERVER_CERTS_DIR}/${DOMAIN}-privkey.pem
 	exitcode "scp ${WEBSERVER_CERTS_DIR}/${DOMAIN}-privkey.pem"
+
+	if [ "${RESTART_WEBSERVER}" == "yes" ];then
+	    echo "restarting webserver one remote machine..."
+
+	    if [ -n "$(which nginx)" ]; then
+		ssh ${WEBSERVER} 'systemctl restart nginx'
+	    elif [ -n "$(which apache2)" ]; then
+		ssh ${WEBSERVER} 'systemctl restart apache'
+	    else
+		echo "no webserver found"
+	    fi
+	fi
     else
 	echo "copy to local ssl dir"
 
@@ -78,18 +90,18 @@ for DOMAIN in ${DOMAINS}; do
 	actionstart "cp ${WEBSERVER_CERTS_DIR}/${DOMAIN}-privkey.pem"
 	cp ${LETSENCRYPT_CERTS}/${NEWEST_CERT}/privkey.pem ${WEBSERVER_CERTS_DIR}/${DOMAIN}-privkey.pem
 	exitcode "cp ${WEBSERVER_CERTS_DIR}/${DOMAIN}-privkey.pem"
-    fi
 
+	if [ "${RESTART_WEBSERVER}" == "yes" ];then
+	    echo "restarting webserver..."
+
+	    if [ -n "$(which nginx)" ]; then
+		systemctl restart nginx
+	    elif [ -n "$(which apache2)" ]; then
+		systemctl restart apache
+	    else
+		echo "no webserver found"
+	    fi
+	fi
+    fi
 done
 
-if [ "${RESTART_WEBSERVER}" == "yes" ];then
-    echo "restarting webserver..."
-
-    if [ -n "$(which nginx)" ]; then
-	systemctl restart nginx
-    elif [ -n "$(which apache2)" ]; then
-	systemctl restart apache
-    else
-	echo "no webserver found"
-    fi
-fi
