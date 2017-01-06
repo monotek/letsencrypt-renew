@@ -8,12 +8,12 @@
 
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
-if [ ! -f config ]; then
-    echo "config not found! create it from config.dist before running this script!"
+if [ ! -f /etc/letsencrypt/config ]; then
+    echo "/etc/letsencrypt/config not found! create it from config.dist before running this script!"
     exit 1
 fi
 
-. "config"
+. /etc/letsencrypt/config
 
 # use command line arguments for domains or add them to config
 if [ -n "${1}" ]; then
